@@ -138,7 +138,7 @@ void * vmem_arena_alloc_bytes(VMemArena * arena, size_t size, size_t align) {
 		if (!ok) {
 			return NULL;
 		}
-		ok = commit_pages(arena->commit, commit - arena->commit);
+		ok = commit_pages(arena->commit, (uintptr_t)commit - (uintptr_t)arena->commit);
 	}
 	if (!ok) {
 		return NULL;
@@ -157,5 +157,5 @@ void vmem_arena_reset(VMemArena * arena) {
 	arena->current = arena->begin;
 }
 void vmem_arena_free(VMemArena * arena) {
-	free_pages(arena->begin, arena->end - arena->begin);
+	free_pages(arena->begin, (uintptr_t)arena->end - (uintptr_t)arena->begin);
 }
