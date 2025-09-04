@@ -92,9 +92,9 @@ void buffered_arena_init(BufferedArena * arena, void * start, size_t size) {
 }
 void * buffered_arena_alloc_bytes(BufferedArena * arena, size_t size, size_t align) {
 	void * alloc_start, * current;
-	bool ok = align_ptr(arena->begin, align, &alloc_start);
+	bool ok = align_ptr(arena->current, align, &alloc_start);
 	ok &= add_ptr(alloc_start, size, &current);
-	ok &= current < arena->end;
+	ok &= current <= arena->end;
 	if (!ok) {
 		return NULL;
 	}
@@ -128,10 +128,10 @@ bool vmem_arena_init(VMemArena * arena, size_t size) {
 }
 void * vmem_arena_alloc_bytes(VMemArena * arena, size_t size, size_t align) {
 	void * alloc_start, * current;
-	bool ok = align_ptr(arena->begin, align, &alloc_start);
+	bool ok = align_ptr(arena->current, align, &alloc_start);
 	ok &= add_ptr(alloc_start, size, &current);
-	ok &= current < arena->end;
-	void * commit = arena->current;
+	ok &= current <= arena->end;
+	void * commit = arena->commit;
 	if (commit < current) {
 		size_t pg_size = get_page_size();
 		ok &= align_ptr(current, pg_size, &commit);
