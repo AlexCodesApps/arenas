@@ -14,7 +14,8 @@ int main(void) {
 		vmem_arena_free(&arena);
 		return 1;
 	}
-	strcpy(a, "The cake is a lie!");
+	const char path[] = "The cake is a lie!";
+	memcpy(a, path, sizeof(path) - 1);
 	puts(a);
 	vmem_arena_free(&arena);
 }
